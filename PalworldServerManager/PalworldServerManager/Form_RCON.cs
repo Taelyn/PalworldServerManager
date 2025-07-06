@@ -1,19 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.Design;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Net.Sockets;
-using System.Reflection.PortableExecutable;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using PalWorld.Networking;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace PalworldServerManager
 {
@@ -497,7 +488,7 @@ namespace PalworldServerManager
         private void button_banListTxt_Click(object sender, EventArgs e)
         {
             string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            string FilePath = Path.Combine(baseDirectory, "steamapps", "common", "PalServer", "Pal", "Saved", "SaveGames", "banlist.txt");
+            string FilePath = Path.Combine("G:/", "Palworld - Dedicated Server", "Pal", "Saved", "SaveGames", "banlist.txt");
             try
             {
                 Process.Start(new ProcessStartInfo { FileName = FilePath, UseShellExecute = true });

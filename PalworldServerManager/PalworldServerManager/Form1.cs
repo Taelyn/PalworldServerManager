@@ -1,19 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Security.Policy;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PalworldServerManager
@@ -225,21 +217,17 @@ namespace PalworldServerManager
 
         private void RunDownloadServerBatchFile()
         {
-            // Get the executable directory
-
-            // Specify the path for the bat file
-            string batFilePath = Path.Combine(baseDirectory, "DownloadUpdateVerifyServer.bat");
             try
             {
                 //Run bat file
                 try
                 {
                     // Create a new process to run the batch file
-                    Process process = new Process
+                    Process process = new()
                     {
                         StartInfo = new ProcessStartInfo
                         {
-                            FileName = batFilePath,
+                            FileName = Path.Combine("D:/", "SteamCMD", "Palworld Update.cmd"),
                             UseShellExecute = true,
                             CreateNoWindow = false
                         }
@@ -293,21 +281,10 @@ namespace PalworldServerManager
                 }
             }
 
-
-
-            // Get the content from the TextBox
-            string batContent = "steamcmd +login anonymous +app_update 2394010 validate +quit";
-
-            // Specify the path for the bat file
-            string batFilePath = Path.Combine(baseDirectory, "DownloadUpdateVerifyServer.bat");
-
             try
             {
-                // Write the content to the bat file
-                File.WriteAllText(batFilePath, batContent);
-
                 // Start a new thread to run the batch file asynchronously
-                Thread thread = new Thread(new ThreadStart(RunDownloadServerBatchFile));
+                Thread thread = new(new ThreadStart(RunDownloadServerBatchFile));
                 thread.Start();
                 serverSettingsForm.SendMessageToConsole("Started Download/Verify/Update Server");
             }
@@ -319,17 +296,15 @@ namespace PalworldServerManager
 
         private void RunStartServerBatchFile()
         {
-
-            // Specify the path for the bat file
-            string batFilePath = Path.Combine(baseDirectory, "RunServer.bat");
             try
             {
                 // Create a new process to run the batch file
-                Process serverProcess = new Process
+                Process serverProcess = new()
                 {
                     StartInfo = new ProcessStartInfo
                     {
-                        FileName = batFilePath,
+                        FileName = Path.Combine("G:/", "Palworld - Dedicated Server", "PalServer.exe"),
+                        Arguments = serverSettingsForm.serv_customServerLaunchArgument,
                         UseShellExecute = true,
                         CreateNoWindow = false
                     }
@@ -340,20 +315,17 @@ namespace PalworldServerManager
                 // Store the reference to the child process
                 serverProcess.WaitForExit();
 
-
-
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Run server start bat catched error: {ex.Message}");
+                MessageBox.Show($"Run server start catched error: {ex.Message}");
             }
         }
 
         private bool CheckSteamCMD()
         {
-            if (File.Exists("steamcmd.exe"))
+            if (File.Exists(Path.Combine("D:/", "SteamCMD", "steamcmd.exe")))
             {
-                //MessageBox.Show("Steamcmd is there");
                 return true;
             }
             else
@@ -365,11 +337,8 @@ namespace PalworldServerManager
 
         private bool CheckPalServer()
         {
-            // Combine the executable directory with the relative path to the INI file
-            string palServerEXEPath = Path.Combine(baseDirectory, "steamapps", "common", "PalServer", "PalServer.exe");
-            if (File.Exists(palServerEXEPath))
+            if (File.Exists(Path.Combine("G:/", "Palworld - Dedicated Server", "PalServer.exe")))
             {
-                //MessageBox.Show("palServerEXEPath is there");
                 return true;
             }
             else
@@ -396,22 +365,14 @@ namespace PalworldServerManager
                 return;
             }
 
-
-
             if (!isServerStarted)
             {
-
-                string batContent = $"cd .\\steamapps\\common\\PalServer\nPalServer.exe {serverSettingsForm.serv_customServerLaunchArgument}";
-                // Specify the path for the bat file
-                string batFilePath = Path.Combine(baseDirectory, "RunServer.bat");
                 try
                 {
                     serverSettingsForm.SendMessageToConsole("Server Started");
-                    // Write the content to the bat file
-                    File.WriteAllText(batFilePath, batContent);
 
                     // Start a new thread to run the batch file asynchronously
-                    Thread thread = new Thread(new ThreadStart(RunStartServerBatchFile));
+                    Thread thread = new(new ThreadStart(RunStartServerBatchFile));
                     thread.Start();
                     serverSettingsForm.SaveGameTimer_Start();
                     serverSettingsForm.AutoRestartServerTimer_Start();
@@ -436,7 +397,7 @@ namespace PalworldServerManager
             StopServer();
         }
 
-        public async void StopServer()
+        public void StopServer()
         {
             if (isServerStarted)
             {
@@ -459,9 +420,7 @@ namespace PalworldServerManager
                 serverSettingsForm.BackUpAlertTimer_Stop();
                 serverSettingsForm.ServerRestartAlertTimer_Stop();
                 serverSettingsForm.SendMessageToConsole("Server Stopped");
-                discordWebHookForm.SendEmbed("Notification", "🔴 Server Stopped");
-                
-
+                discordWebHookForm.SendEmbed("Notification", "🔴 Server Stopped");              
             }
         }
 

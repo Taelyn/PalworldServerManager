@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿using Discord;
+using Discord.Webhook;
+using Newtonsoft.Json;
+using System;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Newtonsoft.Json;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace PalworldServerManager
 {
@@ -51,31 +45,34 @@ namespace PalworldServerManager
         }
 
 
-        private async Task SendMessageToWebhook(DiscordMessage message)
+        private async Task SendMessageToWebhook(EmbedBuilder embed)
         {
             try
             {
-                using (HttpClient client = new HttpClient())
-                {
-                    string json = JsonConvert.SerializeObject(message);
-                    HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
-                    HttpResponseMessage response = await client.PostAsync(WebhookUrl, content);
+                //var config = new DiscordRestConfig
+                //{
+                //    RestClientProvider = DefaultRestClientProvider.Create(true, null),
+                //    LogLevel = LogSeverity.Info,
+                //    DefaultRetryMode = RetryMode.AlwaysRetry,
+                //};
 
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        Debug.WriteLine("Failed to send message to webhook: " + response.StatusCode);
-                    }
-                    else
-                    {
-                        Debug.WriteLine("Message sent successfully!");
-                    }
-                }
+                var webhook = new DiscordWebhookClient(WebhookUrl);
+                
+                await webhook.ModifyWebhookAsync(webhook =>
+                {
+                    webhook.Name = txtUsername;
+                    webhook.Image = new Image(txtAvatarURL);
+                });
+
+                // Send the embed using the webhook client
+                await webhook.SendMessageAsync(embeds: [embed.Build()]);
+                
+                Debug.WriteLine("Message sent successfully!");
             }
             catch (Exception ex)
-            { 
-            
-            }
-            
+            {
+                Debug.WriteLine("Failed to send message to webhook: " + ex);
+            }            
         }
 
         private void button_test_Click(object sender, EventArgs e)
@@ -117,55 +114,43 @@ namespace PalworldServerManager
                 sendFooter = txtEmbedFooter_text;
             }
 
-            DiscordEmbedAuthor author = new DiscordEmbedAuthor()
+            var embed = new EmbedBuilder
             {
-                authorName = txtEmbedAuthor_name,
-                authorUrl = txtEmbedAuthor_url,
-                aurhorIconUrl = txtEmbedAuthor_icon
-            };
-
-            DiscordEmbedImage image = new DiscordEmbedImage()
-            {
-                imageUrl = txtEmbedImage_url
-            };
-
-            DiscordEmbedThumbnail thumbnail = new DiscordEmbedThumbnail()
-            {
-                thumbnailUrl = txtEmbedThumbnail_url
-            };
-
-            DiscordEmbedFooter footer = new DiscordEmbedFooter()
-            {
-                footerText = sendFooter,
-                footerIconUrl = txtEmbedFooter_url
-            };
-
-            string timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ");
-
-
-            DiscordMessage message = new DiscordMessage
-            {
-                Username = txtUsername,
-                AvatarURL = txtAvatarURL,
-                Embeds = new[]
+                Color = ParseDiscordColor(txtEmbedColor),
+                Title = sendTitle,
+                Description = sendMessage,
+                Author = new EmbedAuthorBuilder()
                 {
-                    new DiscordEmbed
-                    {
-                        embedColor = txtEmbedColor,
-                        embedTitle = sendTitle,
-                        embedDescription = sendMessage,
-                        embedAuthor = author,
-                        embedImage = image,
-                        embedThumbnail = thumbnail,
-                        embedFooter = footer,
-                        embedTimestamp = timestamp,
-
-
-                    }
+                    Name = txtEmbedAuthor_name,
+                    Url = txtEmbedAuthor_url,
+                    IconUrl = txtEmbedAuthor_icon
+                },
+                ThumbnailUrl = txtEmbedThumbnail_url,
+                ImageUrl = txtEmbedImage_url,
+                Timestamp = DateTime.Now,
+                Footer = new EmbedFooterBuilder
+                {
+                    Text = sendFooter,
+                    IconUrl = txtEmbedFooter_url,
                 }
             };
 
-            await SendMessageToWebhook(message);
+            await SendMessageToWebhook(embed);
+        }
+
+        private static Color ParseDiscordColor(string hexColor)
+        {
+            if (hexColor.StartsWith("#"))
+                hexColor = hexColor[1..];
+
+            if (hexColor.Length != 6)
+                throw new ArgumentException("Invalid color format. Use RRGGBB or #RRGGBB");
+
+            var r = Convert.ToByte(hexColor[..2], 16);
+            var g = Convert.ToByte(hexColor.Substring(2, 2), 16);
+            var b = Convert.ToByte(hexColor.Substring(4, 2), 16);
+
+            return new Color(r, g, b);
         }
 
         private void button_save_Click(object sender, EventArgs e)
@@ -278,79 +263,6 @@ namespace PalworldServerManager
             }
             PreSend();
         }
-    }
-
-    public class DiscordMessage
-    {
-        [JsonProperty("username")]
-        public string Username { get; set; }
-
-        [JsonProperty("avatar_url")]
-        public string AvatarURL { get; set; }
-
-        [JsonProperty("embeds")]
-        public DiscordEmbed[] Embeds { get; set; }
-    }
-
-    public class DiscordEmbed
-    {
-        [JsonProperty("color")]
-        public string embedColor { get; set; }
-
-        [JsonProperty("title")]
-        public string embedTitle { get; set; }
-
-        [JsonProperty("description")]
-        public string embedDescription { get; set; }
-
-        [JsonProperty("author")]
-        public DiscordEmbedAuthor embedAuthor { get; set; }
-
-        [JsonProperty("image")]
-        public DiscordEmbedImage embedImage { get; set; }
-
-        [JsonProperty("thumbnail")]
-        public DiscordEmbedThumbnail embedThumbnail { get; set; }
-
-        [JsonProperty("footer")]
-        public DiscordEmbedFooter embedFooter { get; set; }
-
-        [JsonProperty("timestamp")]
-        public string embedTimestamp { get; set; }
-
-    }
-
-    public class DiscordEmbedAuthor
-    {
-        [JsonProperty("name")]
-        public string authorName { get; set; }
-
-        [JsonProperty("url")]
-        public string authorUrl { get; set; }
-
-        [JsonProperty("icon_url")]
-        public string aurhorIconUrl { get; set; }
-    }
-
-    public class DiscordEmbedImage
-    {
-        [JsonProperty("url")]
-        public string imageUrl { get; set; }
-    }
-
-    public class DiscordEmbedThumbnail
-    {
-        [JsonProperty("url")]
-        public string thumbnailUrl { get; set; }
-    }
-
-    public class DiscordEmbedFooter
-    {
-        [JsonProperty("text")]
-        public string footerText { get; set; }
-
-        [JsonProperty("icon_url")]
-        public string footerIconUrl { get; set; }
     }
 
     public class SaveLoadData

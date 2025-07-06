@@ -155,6 +155,7 @@ namespace PalworldServerManager
             // 
             // menuStrip1
             // 
+            menuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { serverSettingsToolStripMenuItem, rCONToolStripMenuItem, infoToolStripMenuItem, updateToolStripMenuItem, languageToolStripMenuItem, directoryToolStripMenuItem, githubToolStripMenuItem, discordWebhookToolStripMenuItem });
             resources.ApplyResources(menuStrip1, "menuStrip1");
             menuStrip1.Name = "menuStrip1";

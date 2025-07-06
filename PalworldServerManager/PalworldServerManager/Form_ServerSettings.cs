@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Text;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -25,8 +20,6 @@ namespace PalworldServerManager
         private Form_DiscordWebHook discordWebhookForm;
 
         private const string serverSettingsFileName = "ServerSettingsPreset.json";
-        private string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-
         private const int MaxLines = 100;
 
 
@@ -254,7 +247,7 @@ namespace PalworldServerManager
         private string serv_bShowPlayerList;
 
         //
-        private string serv_allowConnectPlatform;
+        private string serv_crossplayPlatforms;
 
         //
         private string serv_bIsUseBackupSaveData;
@@ -264,6 +257,24 @@ namespace PalworldServerManager
 
         //
         private string serv_supplyDropSpan;
+
+        private string serv_RandomizerType;
+        private string serv_RandomizerSeed;
+        private string serv_bIsRandomizerPalLevelRandom;
+        private string serv_BuildObjectHpRate;
+        private string serv_bHardcore;
+        private string serv_bPalLost;
+        private string serv_bCharacterRecreateInHardcore;
+        private string serv_bBuildAreaLimit;
+        private string serv_ItemWeightRate;
+        private string serv_ChatPostLimitPerMinute;
+        private string serv_EnablePredatorBossPal;
+        private string serv_MaxBuildingLimitNum;
+        private string serv_ServerReplicatePawnCullDistance;
+        private string serv_bAllowGlobalPalboxExport;
+        private string serv_bAllowGlobalPalboxImport;
+        private string serv_EquipmentDurabilityDamageRate;
+        private string serv_ItemContainerForceMarkDirtyInterval;
 
 
         /// <summary>
@@ -355,10 +366,27 @@ namespace PalworldServerManager
         private string dserv_RESTAPIEnabled = "False";
         private string dserv_RESTAPIPort = "8212";
         private string dserv_bShowPlayerList = "False";
-        private string dserv_allowConnectPlatform = "Steam";
+        private string dserv_crossplayPlatforms = "(Steam,Xbox,PS5,Mac)";
         private string dserv_bIsUseBackupSaveData = "True";
         private string dserv_logFormatType = "Text";
         private string dserv_supplyDropSpan = "180";
+        private string dserv_RandomizerType = "None";
+        private string dserv_RandomizerSeed = "";
+        private string dserv_bIsRandomizerPalLevelRandom = "False";
+        private string dserv_BuildObjectHpRate = "1.000000";
+        private string dserv_bHardcore = "False";
+        private string dserv_bPalLost = "False";
+        private string dserv_bCharacterRecreateInHardcore = "False";
+        private string dserv_bBuildAreaLimit = "False";
+        private string dserv_ItemWeightRate = "1.000000";
+        private string dserv_ChatPostLimitPerMinute = "30";
+        private string dserv_EnablePredatorBossPal = "True";
+        private string dserv_MaxBuildingLimitNum = "0";
+        private string dserv_ServerReplicatePawnCullDistance = "15000.000000";
+        private string dserv_bAllowGlobalPalboxExport = "True";
+        private string dserv_bAllowGlobalPalboxImport = "False";
+        private string dserv_EquipmentDurabilityDamageRate = "1.000000";
+        private string dserv_ItemContainerForceMarkDirtyInterval = "1.000000";
 
         public class ServerSettingsPreset
         {
@@ -462,7 +490,7 @@ namespace PalworldServerManager
             public string json_bShowPlayerList { get; set; }
 
             //
-            public string json_allowConnectPlatform { get; set; }
+            public string json_crossplayPlatforms { get; set; }
 
             //
             public string json_bIsUseBackupSaveData { get; set; }
@@ -472,6 +500,24 @@ namespace PalworldServerManager
 
             //
             public string json_supplyDropSpan { get; set; }
+
+            public string json_RandomizerType { get; set; }
+            public string json_RandomizerSeed { get; set; }
+            public string json_bIsRandomizerPalLevelRandom { get; set; }
+            public string json_BuildObjectHpRate { get; set; }
+            public string json_bHardcore { get; set; }
+            public string json_bPalLost { get; set; }
+            public string json_bCharacterRecreateInHardcore { get; set; }
+            public string json_bBuildAreaLimit { get; set; }
+            public string json_ItemWeightRate { get; set; }
+            public string json_ChatPostLimitPerMinute { get; set; }
+            public string json_EnablePredatorBossPal { get; set; }
+            public string json_MaxBuildingLimitNum { get; set; }
+            public string json_ServerReplicatePawnCullDistance { get; set; }
+            public string json_bAllowGlobalPalboxExport { get; set; }
+            public string json_bAllowGlobalPalboxImport { get; set; }
+            public string json_EquipmentDurabilityDamageRate { get; set; }
+            public string json_ItemContainerForceMarkDirtyInterval { get; set; }
         }
 
 
@@ -568,7 +614,7 @@ namespace PalworldServerManager
         {
             // Get the executable directory
             // Combine the executable directory with the relative path to the INI file
-            string iniFilePath = Path.Combine(baseDirectory, "steamapps", "common", "PalServer", "Pal", "Saved", "Config", "WindowsServer", "PalWorldSettings.ini");
+            string iniFilePath = Path.Combine("G:/", "Palworld - Dedicated Server", "Pal", "Saved", "Config", "WindowsServer", "PalWorldSettings.ini");
 
             try
             {
@@ -597,7 +643,7 @@ namespace PalworldServerManager
         {
             // Get the executable directory
             // Combine the executable directory with the relative path to the INI file
-            string iniFilePath = Path.Combine(baseDirectory, "steamapps", "common", "PalServer", "Pal", "Saved", "Config", "WindowsServer", "PalWorldSettings.ini");
+            string iniFilePath = Path.Combine("G:/", "Palworld - Dedicated Server", "Pal", "Saved", "Config", "WindowsServer", "PalWorldSettings.ini");
 
             try
             {
@@ -610,7 +656,7 @@ namespace PalworldServerManager
                     // Display the content in the RichTextBox
                     //richTextBox2.Text = iniContent;
                     string newWorldSettings = $"[/Script/Pal.PalGameWorldSettings]\n" +
-                        $"OptionSettings=(Difficulty={serv_difficulty},DayTimeSpeedRate={serv_dayTimeSpeedRate},NightTimeSpeedRate={serv_nightTimeSpeedRate},ExpRate={serv_expRate},PalCaptureRate={serv_palCaptureRate},PalSpawnNumRate={serv_palSpawnNumRate},PalDamageRateAttack={serv_palDamageRateAttack},PalDamageRateDefense={serv_palDamageRateDefense},PlayerDamageRateAttack={serv_playerDamageRateAttack},PlayerDamageRateDefense={serv_playerDamageRateDefense},PlayerStomachDecreaceRate={serv_playerStomachDecreaseRate},PlayerStaminaDecreaceRate={serv_playerStaminaDecreaseRate},PlayerAutoHPRegeneRate={serv_playerAutoHpRegenRate},PlayerAutoHpRegeneRateInSleep={serv_playerAutoHpRegenRateInSleep},PalStomachDecreaceRate={serv_palStomachDecreaseRate},PalStaminaDecreaceRate={serv_palStaminaDecreaseRate},PalAutoHPRegeneRate={serv_palAutoHpRegeneRate},PalAutoHpRegeneRateInSleep={serv_palAutoHpRegeneRateInSleep},BuildObjectDamageRate={serv_buildObjectDamageRate},BuildObjectDeteriorationDamageRate={serv_buildObjectDeteriorationDamageRate},CollectionDropRate={serv_collectionDropRate},CollectionObjectHpRate={serv_collectionObjectHpRate},CollectionObjectRespawnSpeedRate={serv_collectionObjectRespawnSpeedRate},EnemyDropItemRate={serv_enemyDropItemRate},DeathPenalty={serv_deathPenalty},bEnablePlayerToPlayerDamage={serv_enablePlayerToPlayerDamage},bEnableFriendlyFire={serv_enableFriendlyFire},bEnableInvaderEnemy={serv_enableInvaderEnemy},bActiveUNKO={serv_activeUNKO},bEnableAimAssistPad={serv_enableAimAssistPad},bEnableAimAssistKeyboard={serv_enableAimAssistKeyboard},DropItemMaxNum={serv_dropItemMaxNum},DropItemMaxNum_UNKO={serv_dropItemMaxNum_UNKO},BaseCampMaxNum={serv_baseCampMaxNum},BaseCampWorkerMaxNum={serv_baseCampWorkerMaxNum},DropItemAliveMaxHours={serv_dropItemAliveMaxHours},bAutoResetGuildNoOnlinePlayers={serv_autoResetGuildNoOnlinePlayers},AutoResetGuildTimeNoOnlinePlayers={serv_autoResetGuildTimeNoOnlinePlayers},GuildPlayerMaxNum={serv_guildPlayerMaxNum},PalEggDefaultHatchingTime={serv_palEggDefaultHatchingTime},WorkSpeedRate={serv_workSpeedRate},bIsMultiplay={serv_isMultiplay},bIsPvP={serv_isPvP},bCanPickupOtherGuildDeathPenaltyDrop={serv_canPickupOtherGuildDeathPenaltyDrop},bEnableNonLoginPenalty={serv_enableNonLoginPenalty},bEnableFastTravel={serv_enableFastTravel},bIsStartLocationSelectByMap={serv_isStartLocationSelectByMap},bExistPlayerAfterLogout={serv_existPlayerAfterLogout},bEnableDefenseOtherGuildPlayer={serv_enableDefenseOtherGuildPlayer},CoopPlayerMaxNum={serv_coopPlayerMaxNum},ServerPlayerMaxNum={serv_serverPlayerMaxNum},ServerName=\"{serv_serverName}\",ServerDescription=\"{serv_serverDescription}\",AdminPassword=\"{serv_adminPassword}\",ServerPassword=\"{serv_serverPassword}\",PublicPort={serv_publicPort},PublicIP=\"{serv_publicIP}\",RCONEnabled={serv_rconEnabled},RCONPort={serv_rconPort},Region=\"{serv_region}\",bUseAuth={serv_useAuth},BanListURL=\"{serv_banListURL}\",BaseCampMaxNumInGuild={serv_baseCampMaxNumInGuild},bInvisibleOtherGuildBaseCampAreaFX={serv_bInvisibleOtherGuildBaseCampAreaFX},AutoSaveSpan={serv_autoSaveSpan},RESTAPIEnabled={serv_RESTAPIEnabled},RESTAPIPort={serv_RESTAPIPort},bShowPlayerList={serv_bShowPlayerList},AllowConnectPlatform={serv_allowConnectPlatform},bIsUseBackupSaveData={serv_bIsUseBackupSaveData},LogFormatType={serv_logFormatType},SupplyDropSpan={serv_supplyDropSpan})";
+                        $"OptionSettings=(Difficulty={serv_difficulty},RandomizerType=None,RandomizerSeed=\"\",bIsRandomizerPalLevelRandom=False,DayTimeSpeedRate={serv_dayTimeSpeedRate},NightTimeSpeedRate={serv_nightTimeSpeedRate},ExpRate={serv_expRate},PalCaptureRate={serv_palCaptureRate},PalSpawnNumRate={serv_palSpawnNumRate},PalDamageRateAttack={serv_palDamageRateAttack},PalDamageRateDefense={serv_palDamageRateDefense},PlayerDamageRateAttack={serv_playerDamageRateAttack},PlayerDamageRateDefense={serv_playerDamageRateDefense},PlayerStomachDecreaceRate={serv_playerStomachDecreaseRate},PlayerStaminaDecreaceRate={serv_playerStaminaDecreaseRate},PlayerAutoHPRegeneRate={serv_playerAutoHpRegenRate},PlayerAutoHpRegeneRateInSleep={serv_playerAutoHpRegenRateInSleep},PalStomachDecreaceRate={serv_palStomachDecreaseRate},PalStaminaDecreaceRate={serv_palStaminaDecreaseRate},PalAutoHPRegeneRate={serv_palAutoHpRegeneRate},PalAutoHpRegeneRateInSleep={serv_palAutoHpRegeneRateInSleep},BuildObjectHpRate=1.000000,BuildObjectDamageRate={serv_buildObjectDamageRate},BuildObjectDeteriorationDamageRate={serv_buildObjectDeteriorationDamageRate},CollectionDropRate={serv_collectionDropRate},CollectionObjectHpRate={serv_collectionObjectHpRate},CollectionObjectRespawnSpeedRate={serv_collectionObjectRespawnSpeedRate},EnemyDropItemRate={serv_enemyDropItemRate},DeathPenalty={serv_deathPenalty},bEnablePlayerToPlayerDamage={serv_enablePlayerToPlayerDamage},bEnableFriendlyFire={serv_enableFriendlyFire},bEnableInvaderEnemy={serv_enableInvaderEnemy},bActiveUNKO={serv_activeUNKO},bEnableAimAssistPad={serv_enableAimAssistPad},bEnableAimAssistKeyboard={serv_enableAimAssistKeyboard},DropItemMaxNum={serv_dropItemMaxNum},DropItemMaxNum_UNKO={serv_dropItemMaxNum_UNKO},BaseCampMaxNum={serv_baseCampMaxNum},BaseCampWorkerMaxNum={serv_baseCampWorkerMaxNum},DropItemAliveMaxHours={serv_dropItemAliveMaxHours},bAutoResetGuildNoOnlinePlayers={serv_autoResetGuildNoOnlinePlayers},AutoResetGuildTimeNoOnlinePlayers={serv_autoResetGuildTimeNoOnlinePlayers},GuildPlayerMaxNum={serv_guildPlayerMaxNum},BaseCampMaxNumInGuild={serv_baseCampMaxNumInGuild},PalEggDefaultHatchingTime={serv_palEggDefaultHatchingTime},WorkSpeedRate={serv_workSpeedRate},AutoSaveSpan={serv_autoSaveSpan},bIsMultiplay={serv_isMultiplay},bIsPvP={serv_isPvP},bHardcore=False,bPalLost=False,bCharacterRecreateInHardcore=False,bCanPickupOtherGuildDeathPenaltyDrop={serv_canPickupOtherGuildDeathPenaltyDrop},bEnableNonLoginPenalty={serv_enableNonLoginPenalty},bEnableFastTravel={serv_enableFastTravel},bIsStartLocationSelectByMap={serv_isStartLocationSelectByMap},bExistPlayerAfterLogout={serv_existPlayerAfterLogout},bEnableDefenseOtherGuildPlayer={serv_enableDefenseOtherGuildPlayer},bInvisibleOtherGuildBaseCampAreaFX={serv_bInvisibleOtherGuildBaseCampAreaFX},bBuildAreaLimit=False,ItemWeightRate=1.000000,CoopPlayerMaxNum={serv_coopPlayerMaxNum},ServerPlayerMaxNum={serv_serverPlayerMaxNum},ServerName=\"{serv_serverName}\",ServerDescription=\"{serv_serverDescription}\",AdminPassword=\"{serv_adminPassword}\",ServerPassword=\"{serv_serverPassword}\",PublicPort={serv_publicPort},PublicIP=\"{serv_publicIP}\",RCONEnabled={serv_rconEnabled},RCONPort={serv_rconPort},Region=\"{serv_region}\",bUseAuth={serv_useAuth},BanListURL=\"{serv_banListURL}\",RESTAPIEnabled={serv_RESTAPIEnabled},RESTAPIPort={serv_RESTAPIPort},bShowPlayerList={serv_bShowPlayerList},ChatPostLimitPerMinute=30,CrossplayPlatforms={serv_crossplayPlatforms},bIsUseBackupSaveData={serv_bIsUseBackupSaveData},LogFormatType={serv_logFormatType},SupplyDropSpan={serv_supplyDropSpan},EnablePredatorBossPal=True,MaxBuildingLimitNum=0,ServerReplicatePawnCullDistance=15000.000000,bAllowGlobalPalboxExport=True,bAllowGlobalPalboxImport=True,EquipmentDurabilityDamageRate=1.000000,ItemContainerForceMarkDirtyInterval=1.000000)";
                     File.WriteAllText(iniFilePath, newWorldSettings);
                     //return true to indicate success
                     return true;
@@ -717,11 +763,11 @@ namespace PalworldServerManager
             comboBox_RESTAPIEnabled.Text = dserv_RESTAPIEnabled;
             textBox_RESTAPIPort.Text = dserv_RESTAPIPort;
             comboBox_bShowPlayerList.Text = dserv_bShowPlayerList;
-            textBox_allowConnectPlatform.Text = dserv_allowConnectPlatform;
+            textBox_allowConnectPlatform.Text = dserv_crossplayPlatforms;
             comboBox_bIsUseBackupSaveData.Text = dserv_bIsUseBackupSaveData;
             textBox_logFormatType.Text = dserv_logFormatType;
             textBox_supplyDropSpan.Text = dserv_supplyDropSpan;
-            
+
         }
 
         private void ReadSettingControlsToVariables()
@@ -812,19 +858,16 @@ namespace PalworldServerManager
             serv_existPlayerAfterLogout = comboBox_existPlayerAfterLogout.Text;
             serv_enableDefenseOtherGuildPlayer = comboBox_enableDefenseOtherGuildPlayer.Text;
             serv_useAuth = comboBox_useAuth.Text;
-
-            // New 03/08/2024
             serv_baseCampMaxNumInGuild = textBox_baseCampMaxNumInGuild.Text;
             serv_bInvisibleOtherGuildBaseCampAreaFX = comboBox_bInvisibleOtherGuildBaseCampAreaFX.Text;
             serv_autoSaveSpan = textBox_autoSaveSpan.Text;
             serv_RESTAPIEnabled = comboBox_RESTAPIEnabled.Text;
             serv_RESTAPIPort = textBox_RESTAPIPort.Text;
             serv_bShowPlayerList = comboBox_bShowPlayerList.Text;
-            serv_allowConnectPlatform = textBox_allowConnectPlatform.Text;
+            serv_crossplayPlatforms = textBox_allowConnectPlatform.Text;
             serv_bIsUseBackupSaveData = comboBox_bIsUseBackupSaveData.Text;
             serv_logFormatType = textBox_logFormatType.Text;
             serv_supplyDropSpan = textBox_supplyDropSpan.Text;
-
         }
 
 
@@ -917,29 +960,43 @@ namespace PalworldServerManager
                 json_region = textBox_region.Text,
                 json_useAuth = comboBox_useAuth.Text,
                 json_banListURL = textBox_banListURL.Text,
-
-                // New 03/08/2024
                 json_baseCampMaxNumInGuild = textBox_baseCampMaxNumInGuild.Text,
                 json_bInvisibleOtherGuildBaseCampAreaFX = comboBox_bInvisibleOtherGuildBaseCampAreaFX.Text,
                 json_autoSaveSpan = textBox_autoSaveSpan.Text,
                 json_RESTAPIEnabled = comboBox_RESTAPIEnabled.Text,
                 json_RESTAPIPort = textBox_RESTAPIPort.Text,
                 json_bShowPlayerList = comboBox_bShowPlayerList.Text,
-                json_allowConnectPlatform = textBox_allowConnectPlatform.Text,
+                json_crossplayPlatforms = textBox_allowConnectPlatform.Text,
                 json_bIsUseBackupSaveData = comboBox_bIsUseBackupSaveData.Text,
                 json_logFormatType = textBox_logFormatType.Text,
                 json_supplyDropSpan = textBox_supplyDropSpan.Text
 
+                //json_RandomizerType = dserv_RandomizerType,
+                //json_RandomizerSeed = dserv_RandomizerSeed,
+                //json_bIsRandomizerPalLevelRandom = dserv_bIsRandomizerPalLevelRandom,
+                //json_BuildObjectHpRate = dserv_BuildObjectHpRate,
+                //json_bHardcore = dserv_bHardcore,
+                //json_bPalLost = dserv_bPalLost,
+                //json_bCharacterRecreateInHardcore = dserv_bCharacterRecreateInHardcore,
+                //json_bBuildAreaLimit = dserv_bBuildAreaLimit,
+                //json_ItemWeightRate = dserv_ItemWeightRate,
+                //json_ChatPostLimitPerMinute = dserv_ChatPostLimitPerMinute,
+                //json_EnablePredatorBossPal = dserv_EnablePredatorBossPal,
+                //json_MaxBuildingLimitNum = dserv_MaxBuildingLimitNum,
+                //json_ServerReplicatePawnCullDistance = dserv_ServerReplicatePawnCullDistance,
+                //json_bAllowGlobalPalboxExport = dserv_bAllowGlobalPalboxExport,
+                //json_bAllowGlobalPalboxImport = dserv_bAllowGlobalPalboxImport,
+                //json_EquipmentDurabilityDamageRate = dserv_EquipmentDurabilityDamageRate,
+                //json_ItemContainerForceMarkDirtyInterval = dserv_ItemContainerForceMarkDirtyInterval
             };
 
             // Serialize settings to JSON
-            string json = JsonSerializer.Serialize(settings);
+            string json = JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true });
 
             // Save JSON to file
             File.WriteAllText(serverSettingsFileName, json);
 
             //MessageBox.Show("Settings saved successfully.");
-
         }
 
         private void LoadServerSettingsJSON()
@@ -1034,14 +1091,13 @@ namespace PalworldServerManager
                 textBox_region.Text = settings.json_region;
                 comboBox_useAuth.Text = settings.json_useAuth;
                 textBox_banListURL.Text = settings.json_banListURL;
-
                 textBox_baseCampMaxNumInGuild.Text = settings.json_baseCampMaxNumInGuild;
                 comboBox_bInvisibleOtherGuildBaseCampAreaFX.Text = settings.json_bInvisibleOtherGuildBaseCampAreaFX;
                 textBox_autoSaveSpan.Text = settings.json_autoSaveSpan;
                 comboBox_RESTAPIEnabled.Text = settings.json_RESTAPIEnabled;
                 textBox_RESTAPIPort.Text = settings.json_RESTAPIPort;
-                comboBox_bShowPlayerList.Text = settings.json_bShowPlayerList; 
-                textBox_allowConnectPlatform.Text = settings.json_allowConnectPlatform;
+                comboBox_bShowPlayerList.Text = settings.json_bShowPlayerList;
+                textBox_allowConnectPlatform.Text = settings.json_crossplayPlatforms;
                 comboBox_bIsUseBackupSaveData.Text = settings.json_bIsUseBackupSaveData;
                 textBox_logFormatType.Text = settings.json_logFormatType;
                 textBox_supplyDropSpan.Text = settings.json_supplyDropSpan;
@@ -1135,22 +1191,37 @@ namespace PalworldServerManager
                     json_region = dserv_region,
                     json_useAuth = dserv_useAuth,
                     json_banListURL = dserv_banListURL,
-                    // New 03/08/2024
                     json_baseCampMaxNumInGuild = dserv_baseCampMaxNumInGuild,
                     json_bInvisibleOtherGuildBaseCampAreaFX = dserv_bInvisibleOtherGuildBaseCampAreaFX,
                     json_autoSaveSpan = dserv_autoSaveSpan,
                     json_RESTAPIEnabled = dserv_RESTAPIEnabled,
                     json_RESTAPIPort = dserv_RESTAPIPort,
                     json_bShowPlayerList = dserv_bShowPlayerList,
-                    json_allowConnectPlatform = dserv_allowConnectPlatform,
+                    json_crossplayPlatforms = dserv_crossplayPlatforms,
                     json_bIsUseBackupSaveData = dserv_bIsUseBackupSaveData,
                     json_logFormatType = dserv_logFormatType,
-                    json_supplyDropSpan = dserv_supplyDropSpan
-
+                    json_supplyDropSpan = dserv_supplyDropSpan,
+                    json_RandomizerType = dserv_RandomizerType,
+                    json_RandomizerSeed = dserv_RandomizerSeed,
+                    json_bIsRandomizerPalLevelRandom = dserv_bIsRandomizerPalLevelRandom,
+                    json_BuildObjectHpRate = dserv_BuildObjectHpRate,
+                    json_bHardcore = dserv_bHardcore,
+                    json_bPalLost = dserv_bPalLost,
+                    json_bCharacterRecreateInHardcore = dserv_bCharacterRecreateInHardcore,
+                    json_bBuildAreaLimit = dserv_bBuildAreaLimit,
+                    json_ItemWeightRate = dserv_ItemWeightRate,
+                    json_ChatPostLimitPerMinute = dserv_ChatPostLimitPerMinute,
+                    json_EnablePredatorBossPal = dserv_EnablePredatorBossPal,
+                    json_MaxBuildingLimitNum = dserv_MaxBuildingLimitNum,
+                    json_ServerReplicatePawnCullDistance = dserv_ServerReplicatePawnCullDistance,
+                    json_bAllowGlobalPalboxExport = dserv_bAllowGlobalPalboxExport,
+                    json_bAllowGlobalPalboxImport = dserv_bAllowGlobalPalboxImport,
+                    json_EquipmentDurabilityDamageRate = dserv_EquipmentDurabilityDamageRate,
+                    json_ItemContainerForceMarkDirtyInterval = dserv_ItemContainerForceMarkDirtyInterval
                 };
 
-                // Serialize default settings to JSON
-                string defaultJson = JsonSerializer.Serialize(defaultSettings);
+                // Serialize settings to JSON
+                string defaultJson = JsonSerializer.Serialize(defaultSettings, new JsonSerializerOptions { WriteIndented = true });
 
                 // Save JSON to file
                 File.WriteAllText(serverSettingsFileName, defaultJson);
@@ -1163,7 +1234,7 @@ namespace PalworldServerManager
         {
             // Get the base directory of the application
 
-            string iniFilePath = Path.Combine(baseDirectory, "steamapps", "common", "PalServer", "Pal", "Saved", "Config", "WindowsServer", "PalWorldSettings.ini");
+            string iniFilePath = Path.Combine("G:/", "Palworld - Dedicated Server", "Pal", "Saved", "Config", "WindowsServer", "PalWorldSettings.ini");
             OpenFileDirectoryGiven(iniFilePath);
 
 
@@ -1187,10 +1258,9 @@ namespace PalworldServerManager
             {
                 try
                 {
-                    int newInt;
                     bool isSuccessParse;
 
-                    if (int.TryParse(serv_backupInterval, out newInt))
+                    if (int.TryParse(serv_backupInterval, out int newInt))
                     {
                         // Parsing successful, newMaxBackupInt now holds the parsed integer value
                         //SendMessageToConsole("Parsing successful. Parsed integer value: " + newInt);
@@ -1220,7 +1290,6 @@ namespace PalworldServerManager
         public void SaveGameTimer_Stop()
         {
             timer1.Stop();
-
         }
 
         private void SaveGame()
@@ -1229,7 +1298,7 @@ namespace PalworldServerManager
             {
                 try
                 {
-                    string savePath = Path.Combine(baseDirectory, "steamapps", "common", "PalServer", "Pal", "Saved", "SaveGames");
+                    string savePath = Path.Combine("G:/", "Palworld - Dedicated Server", "Pal", "Saved", "SaveGames");
                     if (!string.IsNullOrWhiteSpace(savePath) && !string.IsNullOrWhiteSpace(serv_backupToDirectory))
                     {
                         try
@@ -1312,10 +1381,8 @@ namespace PalworldServerManager
 
             //MessageBox.Show(serv_backupToDirectory);
 
-
-            int newMaxBackupInt;
             bool isSuccessParse;
-            if (int.TryParse(serv_maxBackup, out newMaxBackupInt))
+            if (int.TryParse(serv_maxBackup, out int newMaxBackupInt))
             {
                 // Parsing successful, newMaxBackupInt now holds the parsed integer value
                 //SendMessageToConsole("Parsing successful. Parsed integer value: " + newMaxBackupInt);
@@ -1338,7 +1405,6 @@ namespace PalworldServerManager
             {
                 return;
             }
-
 
             if (Directory.Exists(serv_backupToDirectory))
             {
@@ -1377,16 +1443,14 @@ namespace PalworldServerManager
 
         private void button_backupTo_Click(object sender, EventArgs e)
         {
-            using (var folderBrowserDialog = new FolderBrowserDialog())
-            {
-                DialogResult result = folderBrowserDialog.ShowDialog();
+            using var folderBrowserDialog = new FolderBrowserDialog();
+            DialogResult result = folderBrowserDialog.ShowDialog();
 
-                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(folderBrowserDialog.SelectedPath))
-                {
-                    // Display the selected folder path in a TextBox.
-                    textBox_backupTo.Text = folderBrowserDialog.SelectedPath;
-                    serv_backupToDirectory = folderBrowserDialog.SelectedPath;
-                }
+            if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(folderBrowserDialog.SelectedPath))
+            {
+                // Display the selected folder path in a TextBox.
+                textBox_backupTo.Text = folderBrowserDialog.SelectedPath;
+                serv_backupToDirectory = folderBrowserDialog.SelectedPath;
             }
         }
 
@@ -1455,7 +1519,10 @@ namespace PalworldServerManager
                     }
                     timer2.Interval = actualTimer;
                 }
-                catch (Exception ex) { SendMessageToConsole($"Restart server timer start catched error{ex.Message}\n Check your server restart intervals, makesure they are a integer value without mistypes"); return; }
+                catch (Exception ex) 
+                { 
+                    SendMessageToConsole($"Restart server timer start catched error{ex.Message}\n Check your server restart intervals, makesure they are a integer value without mistypes"); return; 
+                }
                 timer2.Start();
             }
         }
@@ -1519,10 +1586,9 @@ namespace PalworldServerManager
             {
                 try
                 {
-                    int newInt;
                     bool isSuccessParse;
 
-                    if (int.TryParse(serv_onCMDCrashRestartInterval, out newInt))
+                    if (int.TryParse(serv_onCMDCrashRestartInterval, out int newInt))
                     {
                         //SendMessageToConsole("Parsing successful. Parsed integer value: " + newInt);
                         isSuccessParse = true;
@@ -1617,10 +1683,9 @@ namespace PalworldServerManager
         public void BackUpAlertTimer_Start()
         {
 
-            int newInt2;
             bool isSuccessParse2;
 
-            if (int.TryParse(serv_backupInterval, out newInt2))
+            if (int.TryParse(serv_backupInterval, out int newInt2))
             {
                 //SendMessageToConsole("Parsing successful. Parsed integer value: " + newInt);
                 isSuccessParse2 = true;
@@ -1635,10 +1700,9 @@ namespace PalworldServerManager
             {
                 try
                 {
-                    int newInt;
                     bool isSuccessParse;
 
-                    if (int.TryParse(serv_backupRCONAlertInterval, out newInt))
+                    if (int.TryParse(serv_backupRCONAlertInterval, out int newInt))
                     {
                         //SendMessageToConsole("Parsing successful. Parsed integer value: " + newInt);
                         isSuccessParse = true;
@@ -1656,7 +1720,7 @@ namespace PalworldServerManager
                         SendMessageToConsole($"backup rcon alert timer interval value: {serv_backupRCONAlertInterval} has failed to parse to a valid positive integer number, make sure you enter a valid value.");
                         return;
                     }
-                    timer_backupRCONAlertTimer.Interval = actualTimer; 
+                    timer_backupRCONAlertTimer.Interval = actualTimer;
                 }
                 catch (Exception ex) { SendMessageToConsole($"backup rcon alert timer catched error: " + ex.Message); return; }
                 timer_backupRCONAlertTimer.Start();
@@ -1671,10 +1735,9 @@ namespace PalworldServerManager
         public void ServerRestartAlertTimer_Start()
         {
 
-            int newInt2;
             bool isSuccessParse2;
 
-            if (int.TryParse(serv_autoRestartEvery, out newInt2))
+            if (int.TryParse(serv_autoRestartEvery, out int newInt2))
             {
                 //SendMessageToConsole("Parsing successful. Parsed integer value: " + newInt);
                 isSuccessParse2 = true;
@@ -1689,10 +1752,9 @@ namespace PalworldServerManager
             {
                 try
                 {
-                    int newInt;
                     bool isSuccessParse;
 
-                    if (int.TryParse(serv_restartServerRCONAlertInterval, out newInt))
+                    if (int.TryParse(serv_restartServerRCONAlertInterval, out int newInt))
                     {
                         //SendMessageToConsole("Parsing successful. Parsed integer value: " + newInt);
                         isSuccessParse = true;
@@ -1710,7 +1772,7 @@ namespace PalworldServerManager
                         SendMessageToConsole($"server restart alert timer interval value: {serv_restartServerRCONAlertInterval} has failed to parse to a valid positive integer number, make sure you enter a valid value.");
                         return;
                     }
-                    timer_restartServerRCONAlertTimer.Interval = actualTimer; 
+                    timer_restartServerRCONAlertTimer.Interval = actualTimer;
                 }
                 catch (Exception ex) { SendMessageToConsole($"server restart alert timer catched error: " + ex.Message); return; }
                 timer_restartServerRCONAlertTimer.Start();
@@ -1733,9 +1795,5 @@ namespace PalworldServerManager
             rconForm.RCONAlert($"{serv_restartServerRCONAlertMessage}");
             SendMessageToConsole($"{serv_restartServerRCONAlertMessage}");
         }
-
-
-
-
     }
 }
