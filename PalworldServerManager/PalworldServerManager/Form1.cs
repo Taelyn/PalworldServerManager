@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
@@ -382,6 +383,7 @@ namespace PalworldServerManager
                     discordWebHookForm.SendEmbed("Notification", "🟢 Server has started");
                     isServerStarted = true;
                     button_startServer.Enabled = false;
+                    button_startServer.BackColor = Color.Green;
                     button_stopServer.Enabled = true;
 
                 }
