@@ -1,10 +1,10 @@
-﻿using System;
+﻿using PalWorld.Networking;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using PalWorld.Networking;
 
 namespace PalworldServerManager
 {
@@ -125,7 +125,6 @@ namespace PalworldServerManager
                         isAutoUpdatePlayers = false;
                         richTextBox_output.AppendText($"Auto update player list disabled" + Environment.NewLine);
                     }
-
                 }
                 else
                 {
