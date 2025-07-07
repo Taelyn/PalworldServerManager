@@ -242,7 +242,7 @@ namespace PalworldServerManager
                 });
             }
 
-            string json = JsonSerializer.Serialize(settings);
+            string json = JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText("ServerRestartScheduleSettings.json", json);
             MessageBox.Show("Server Restart Schedule Saved");
         }
