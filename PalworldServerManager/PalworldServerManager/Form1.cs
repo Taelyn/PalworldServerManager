@@ -4,8 +4,11 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
+using System.Net.Http;
 using System.Net.Sockets;
+using System.Text.Json;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PalworldServerManager
@@ -29,9 +32,6 @@ namespace PalworldServerManager
         // To download Palworld Server using steamcmd
         // steamcmd +login anonymous +app_update 2394010 validate +quit
         //
-
-        private string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-
         Form_ServerSettings serverSettingsForm;
         public Form_RCON rconForm;
         Form_ServerRestart serverRestartForm;
@@ -127,22 +127,21 @@ namespace PalworldServerManager
         }
 
         //MAIN FORM SECTION
-        private string GetPublicIpAddress()
+        private async Task<string> GetPublicIpAddressAsync()
         {
             try
             {
-                using (WebClient webClient = new WebClient())
-                {
-                    // Make a request to api.ipify.org to get the public IP address
-                    string response = webClient.DownloadString("https://api.ipify.org?format=json");
+                using HttpClient httpClient = new();
 
-                    // Parse the JSON response to extract the public IP address
-                    int startIndex = response.IndexOf("\"ip\":\"") + 6;
-                    int endIndex = response.IndexOf("\"", startIndex);
-                    string publicIpAddress = response.Substring(startIndex, endIndex - startIndex);
-                    Debug.WriteLine(publicIpAddress);
-                    return publicIpAddress;
-                }
+                // Await the async GET request
+                string response = await httpClient.GetStringAsync("https://api.ipify.org?format=json");
+
+                // Parse the JSON response
+                using JsonDocument doc = JsonDocument.Parse(response);
+                string publicIpAddress = doc.RootElement.GetProperty("ip").GetString();
+
+                Debug.WriteLine(publicIpAddress);
+                return publicIpAddress;
             }
             catch (Exception ex)
             {
@@ -173,9 +172,9 @@ namespace PalworldServerManager
             }
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private async void button4_Click(object sender, EventArgs e)
         {
-            publicIP = GetPublicIpAddress();
+            publicIP = await GetPublicIpAddressAsync();
             textBox1.Text = publicIP;
         }
 
@@ -185,33 +184,34 @@ namespace PalworldServerManager
             textBox2.Text = localIP;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
             string zipUrl = "https://steamcdn-a.akamaihd.net/client/installer/steamcmd.zip";
             string fileName = "steamcmd.zip";
-            string savePath = Path.Combine(baseDirectory, fileName);
-            string extractPath = baseDirectory;
+            string savePath = Path.Combine("D:/", "SteamCMD", fileName);
 
-            using (WebClient webClient = new WebClient())
+            try
             {
-                try
-                {
-                    webClient.DownloadFile(zipUrl, savePath);
+                using HttpClient httpClient = new();
 
-                    // Unzip the downloaded file
-                    ZipFile.ExtractToDirectory(savePath, extractPath);
+                // Download the file asynchronously as byte[]
+                byte[] data = await httpClient.GetByteArrayAsync(zipUrl);
 
-                    serverSettingsForm.SendMessageToConsole("Download and extraction of steamcmd completed!");
-                }
-                catch (Exception ex)
-                {
-                    serverSettingsForm.SendMessageToConsole($"Download steamcmd catched error: {ex.Message}");
-                }
-                finally
-                {
-                    // delete the downloaded .zip file after extraction
-                    File.Delete(savePath);
-                }
+                // Save the zip file to disk
+                await File.WriteAllBytesAsync(savePath, data);
+
+                // Extract the zip archive
+                ZipFile.ExtractToDirectory(savePath, Path.Combine("D:/", "SteamCMD"), overwriteFiles: true);
+
+                serverSettingsForm.SendMessageToConsole("Download and extraction of steamcmd completed!");
+            }
+            catch (Exception ex)
+            {
+                serverSettingsForm.SendMessageToConsole($"Download steamcmd caught error: {ex.Message}");
+            }
+            finally
+            {
+                try { File.Delete(savePath); } catch { /* ignore cleanup errors */ }
             }
         }
 
@@ -456,7 +456,7 @@ namespace PalworldServerManager
 
         private void baseDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFileDirectoryGiven(baseDirectory);
+            OpenFileDirectoryGiven(Path.Combine("G:/", "Palworld - Dedicated Server"));
         }
 
         private void instructionToolStripMenuItem_Click(object sender, EventArgs e)
