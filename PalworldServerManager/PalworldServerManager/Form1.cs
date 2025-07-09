@@ -80,7 +80,7 @@ namespace PalworldServerManager
             serverRestartForm = new Form_ServerRestart(this);
             discordWebHookForm = new Form_DiscordWebHook(this);
             serverSettingsForm = new Form_ServerSettings(this);
-            
+
             LoadForm(serverSettingsForm, true);
             LoadForm(rconForm, true);
             LoadForm(serverRestartForm, true);
@@ -299,7 +299,6 @@ namespace PalworldServerManager
         {
             try
             {
-                // Create a new process to run the batch file
                 Process serverProcess = new()
                 {
                     StartInfo = new ProcessStartInfo
@@ -422,7 +421,7 @@ namespace PalworldServerManager
                 serverSettingsForm.BackUpAlertTimer_Stop();
                 serverSettingsForm.ServerRestartAlertTimer_Stop();
                 serverSettingsForm.SendMessageToConsole("Server Stopped");
-                discordWebHookForm.SendEmbed("Notification", "🔴 Server Stopped");              
+                discordWebHookForm.SendEmbed("Notification", "🔴 Server Stopped");
             }
         }
 

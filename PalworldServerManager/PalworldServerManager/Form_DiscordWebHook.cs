@@ -57,7 +57,7 @@ namespace PalworldServerManager
                 //};
 
                 var webhook = new DiscordWebhookClient(WebhookUrl);
-                
+
                 await webhook.ModifyWebhookAsync(webhook =>
                 {
                     webhook.Name = txtUsername;
@@ -66,13 +66,13 @@ namespace PalworldServerManager
 
                 // Send the embed using the webhook client
                 await webhook.SendMessageAsync(embeds: [embed.Build()]);
-                
+
                 Debug.WriteLine("Message sent successfully!");
             }
             catch (Exception ex)
             {
                 Debug.WriteLine("Failed to send message to webhook: " + ex);
-            }            
+            }
         }
 
         private void button_test_Click(object sender, EventArgs e)
@@ -94,7 +94,7 @@ namespace PalworldServerManager
             {
                 sendMessage = txtEmbedDescription;
             }
-            
+
             if (customTitle != null)
             {
                 sendTitle = customTitle;
@@ -156,7 +156,7 @@ namespace PalworldServerManager
         private void button_save_Click(object sender, EventArgs e)
         {
             SaveData();
-            
+
         }
 
         private void PreSend()

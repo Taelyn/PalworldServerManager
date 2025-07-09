@@ -1519,9 +1519,9 @@ namespace PalworldServerManager
                     }
                     timer2.Interval = actualTimer;
                 }
-                catch (Exception ex) 
-                { 
-                    SendMessageToConsole($"Restart server timer start catched error{ex.Message}\n Check your server restart intervals, makesure they are a integer value without mistypes"); return; 
+                catch (Exception ex)
+                {
+                    SendMessageToConsole($"Restart server timer start catched error{ex.Message}\n Check your server restart intervals, makesure they are a integer value without mistypes"); return;
                 }
                 timer2.Start();
             }

@@ -279,7 +279,7 @@ namespace PalworldServerManager
                 return;
 
             }
-            catch (PalWorld.Networking.RconNetworkException palex)
+            catch (RconNetworkException palex)
             {
                 richTextBox_output.AppendText($"RconNetworkException: {palex.Message}" + Environment.NewLine);
             }
