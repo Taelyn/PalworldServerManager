@@ -303,18 +303,21 @@ namespace PalworldServerManager
                 {
                     StartInfo = new ProcessStartInfo
                     {
-                        FileName = Path.Combine("G:/", "Palworld - Dedicated Server", "PalServer.exe"),
+                        FileName = Path.Combine("G:/", "Palworld - Dedicated Server", "Pal", "Binaries", "Win64", "PalServer-Win64-Shipping-Cmd.exe"),
                         Arguments = serverSettingsForm.serv_customServerLaunchArgument,
-                        UseShellExecute = true,
-                        CreateNoWindow = false
-                    }
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
+                        RedirectStandardOutput = false,
+                        RedirectStandardError = false,
+                        WindowStyle = ProcessWindowStyle.Hidden
+                    },
+                    EnableRaisingEvents = false
                 };
 
-                // Start the process
                 serverProcess.Start();
-                // Store the reference to the child process
-                serverProcess.WaitForExit();
 
+                serverProcess.WaitForExit();
+                serverSettingsForm.SendMessageToConsole("Server process exited.");
             }
             catch (Exception ex)
             {
@@ -413,6 +416,7 @@ namespace PalworldServerManager
                     process.Kill();
                 }
                 isServerStarted = false;
+                button_startServer.BackColor = Color.Red;
                 button_startServer.Enabled = true;
                 button_stopServer.Enabled = false;
                 serverSettingsForm.SaveGameTimer_Stop();
