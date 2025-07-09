@@ -1516,6 +1516,7 @@ namespace PalworldServerManager
             // 
             resources.ApplyResources(richTextBox_alert, "richTextBox_alert");
             richTextBox_alert.Name = "richTextBox_alert";
+            richTextBox_alert.ReadOnly = true;
             // 
             // timer1
             // 
