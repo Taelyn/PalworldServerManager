@@ -1,12 +1,8 @@
-﻿using System;
+﻿using Palworld.RESTSharp;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,7 +11,7 @@ namespace PalworldServerManager
 {
     public partial class Form_ServerRestart : Form
     {
-        
+
 
 
         private List<Tuple<CheckBox, DateTimePicker, DateTimePicker, Button>> settingsList;
@@ -162,8 +158,38 @@ namespace PalworldServerManager
                             //MessageBox.Show("Matched");
                             if (mainForm != null)
                             {
-                                mainForm.StopServer();
-                                await Task.Delay(1000); // Delay for 1000 milliseconds (1 second)
+                                var client = RestAPI.CreatePalworldClient();
+                                await client.ShutdownASync(300, "Server will reboot in 5 minutes! Please log out to prevent data loss. Kick in 4 minutes");
+
+                                // Wait 3 minutes before starting 2-minute warning
+                                await Task.Delay(180000); // 3 minutes
+                                await client.BroadcastMessageASync("Server will reboot in 2 minutes! Please log out to prevent data loss. Kick in 1 minute");
+
+                                // Wait 1 more minute for 1-minute warning
+                                await Task.Delay(60000); // 1 minute
+                                await client.BroadcastMessageASync("Server will reboot in 1 minute! Kick now");
+
+                                var players = await client.GetPlayersASync();
+
+                                foreach (Player player in players.players)
+                                {
+                                    await client.KickPlayerASync(player.UserID, "Server Reboot! Please wait 2 minutes before logging in");
+                                }
+
+                                await client.SaveWorldASync();
+
+                                client.Dispose();
+
+                                //mainForm.StopServer();
+
+                                Process[] processes;
+                                do
+                                {
+                                    await Task.Delay(5000); // check every 5s
+                                    processes = Process.GetProcessesByName("PalServer-Win64-Shipping-Cmd");
+                                } while (processes.Length > 0);
+
+                                mainForm.isServerStarted = false;
                                 mainForm.StartServer();
                             }
                             else
@@ -174,7 +200,6 @@ namespace PalworldServerManager
                     }
                 }
             }
-            
         }
 
         private void LoadSettings()

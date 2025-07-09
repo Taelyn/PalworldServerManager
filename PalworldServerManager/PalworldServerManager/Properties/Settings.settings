@@ -17,5 +17,8 @@
     <Setting Name="Saved_rconAutpUpdatePlayerList" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="AdminPassword" Type="System.String" Scope="User">
+      <Value Profile="(Default)">7itvnztf</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
