@@ -116,7 +116,7 @@ namespace PalworldServerManager
 
             var embed = new EmbedBuilder
             {
-                Color = ParseDiscordColor(txtEmbedColor),
+                Color = new Color(0x007aff), //ParseDiscordColor(txtEmbedColor),
                 Title = sendTitle,
                 Description = sendMessage,
                 Author = new EmbedAuthorBuilder()
@@ -138,9 +138,12 @@ namespace PalworldServerManager
             await SendMessageToWebhook(embed);
         }
 
-        private static Color ParseDiscordColor(string hexColor)
+        private static Color ParseDiscordColor(string? hexColor)
         {
-            if (hexColor.StartsWith("#"))
+            if (string.IsNullOrWhiteSpace(hexColor))
+                return new Color(0x007aff);
+
+            if (hexColor.StartsWith('#'))
                 hexColor = hexColor[1..];
 
             if (hexColor.Length != 6)
